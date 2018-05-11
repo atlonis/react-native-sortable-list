@@ -10,6 +10,7 @@ const ZINDEX = Platform.OS === 'ios' ? 'zIndex' : 'elevation';
 function uniqueRowKey(key) {
   return `${key}${uniqueRowKey.id}`
 }
+const Win = Dimensions.get('window')
 
 uniqueRowKey.id = 0
 
@@ -223,7 +224,7 @@ export default class SortableList extends Component {
   }
 
   _renderRows() {
-    const {horizontal, rowActivationTime, sortingEnabled, renderRow} = this.props;
+    const {horizontal, rowActivationTime, sortingEnabled, renderRow, extraData} = this.props;
     const {animated, order, data, activeRowKey, releasedRowKey, rowsLayouts} = this.state;
 
 
@@ -239,8 +240,10 @@ export default class SortableList extends Component {
           location.x = nextX;
           nextX += rowsLayouts[key] ? rowsLayouts[key].width : 0;
         } else {
-          location.y = nextY;
-          nextY += rowsLayouts[key] ? rowsLayouts[key].height : 0;
+                 location.y = nextY
+          nextY += rowsLayouts[key] && key === extraData
+            ? rowsLayouts[key].height + Win.width * 0.5625 + 20
+            : rowsLayouts[key] ? rowsLayouts[key].height : 0
         }
       }
 
